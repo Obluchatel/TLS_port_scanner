@@ -49,6 +49,6 @@ if args.scan and args.scan == 0:
 elif args.scan and args.scan == 1:
     scan_ports([443, 8443])
 elif args.scan and args.scan == 2:
-    check_tls_port(target)
+    check_tls_port(hostname)
 else:
     scan_ports(args.ports)
