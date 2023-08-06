@@ -7,14 +7,14 @@ parser.add_argument("ip", type=str,
                     help="FDQN or IPv4 address of target host")
 parser.add_argument("ports", type=int, nargs='*',
                     help="Port you want to scan. Option 0 - scan all ports, "
-                         "option 1 - scan specific ports. Default option 1")
+                         "option 1 - scan well known TLS ports, option 2 - scan specific ports."
+                         " Default option 1")
 parser.add_argument("-s", "--scan", type=int, choices=[0, 1, 2],
                     help="increase output verbosity")
 
 args = parser.parse_args()
-target = args.ip
+hostname = args.ip
 list_of_ports = args.ports
-
 context = ssl.create_default_context()
 
 
@@ -22,11 +22,11 @@ def scan_ports(list_of_ports):
     for port_number in list_of_ports:
         print(f"Checking port {port_number}")
         try:
-            with socket.create_connection((target, port_number), timeout=0.1) as sock:
-                with context.wrap_socket(sock, server_hostname=target) as ssock:
+            with socket.create_connection((hostname, port_number), timeout=0.1) as sock:
+                with context.wrap_socket(sock, server_hostname=hostname) as ssock:
                     print(f"{ssock.version()} connection established  with port {port_number}")
         except ConnectionError:
-            print(f'TLS is not supported for port {port_number} on {target}')
+            print(f'TLS is not supported for port {port_number} on {hostname}')
 
 
 def check_tls_port(hostname):
