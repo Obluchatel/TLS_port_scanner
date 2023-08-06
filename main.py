@@ -16,6 +16,8 @@ target = args.ip
 list_of_ports = args.ports
 
 context = ssl.create_default_context()
+
+
 def scan_ports(list_of_ports):
     for port_number in list_of_ports:
         print(f"Checking port {port_number}")
@@ -23,31 +25,30 @@ def scan_ports(list_of_ports):
             with socket.create_connection((target, port_number), timeout=0.1) as sock:
                 with context.wrap_socket(sock, server_hostname=target) as ssock:
                     print(f"{ssock.version()} connection established  with port {port_number}")
-        except:
+        except ConnectionError:
             print(f'TLS is not supported for port {port_number} on {target}')
 
 
-
-def check_TLS_port(target):
+def check_tls_port(hostname):
     for port_number in list_of_ports:
         try:
-            with socket.create_connection((target, port_number), timeout=0.1) as sock:
-                with context.wrap_socket(sock, server_hostname=target) as ssock:
+            with socket.create_connection((hostname, port_number), timeout=0.1) as sock:
+                with context.wrap_socket(sock, server_hostname=hostname) as ssock:
                     for i in ssock.shared_ciphers():
                         print(f"Server support {i}")
                     print(f"Server chose {ssock.cipher()}")
                     cert_info = ssock.getpeercert()
                     for i in cert_info.keys():
                         print(f"{i}: {cert_info[i]}")
-        except:
-            print(f'TLS is not supported for port {port_number} on {target}')
+        except ConnectionError:
+            print(f'TLS is not supported for port {port_number} on {hostname}')
 
 
 if args.scan and args.scan == 0:
-    scan_ports(range(0,65536))
+    scan_ports(range(0, 65536))
 elif args.scan and args.scan == 1:
     scan_ports([443, 8443])
 elif args.scan and args.scan == 2:
-    check_TLS_port(target)
+    check_tls_port(target)
 else:
     scan_ports(args.ports)
