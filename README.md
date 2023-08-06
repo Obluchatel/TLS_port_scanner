@@ -1,6 +1,6 @@
 # TLS Port Scanner
 
-This is a simple Python script that allows you to scan TLS-enabled ports on a target host. The script uses the `socket` and `ssl` libraries to establish TLS connections and retrieve information about the server's SSL/TLS capabilities and certificate.
+This is a simple Python script that allows you to scan TLS-enabled ports on a target local or remote host if more sophisticated tools are not available. The script uses the `socket` and `ssl` libraries to establish TLS connections and retrieve information about the server's SSL/TLS capabilities and certificate.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ python tls_port_scanner.py ip [ports] [-s {0, 1, 2}]
 
 - `ports` (optional): The ports you want to scan for TLS support. You can provide multiple port numbers separated by spaces. By default, the script will scan well-known TLS ports if this argument is not provided.
 
-- `-s`, `--scan` (optional): Increase output verbosity. This argument takes an integer value: `0` for minimal output, `1` for intermediate output, and `2` for detailed output.
+- `-s`, `--scan` (optional): Increase output verbosity. This argument takes an integer value: `0` for scanning all available ports, `1` for scanning well-known ports, and `2` for scanning specific ports.
 
 ## Examples
 
